@@ -46,10 +46,8 @@ func New() *Cache {
 func (c *Cache) Has(key string) bool {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	if e, ok := c.values[key]; ok {
-		return true
-	}
-	return nil
+	_, has := c.values[key]
+	return has
 }
 
 // Get retrieves the key's value if it exists, incrementing the frequency.
