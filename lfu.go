@@ -94,6 +94,18 @@ func (c *Cache) GetFrequency(key string) int {
 	return 0
 }
 
+// Keys returns all the keys in the cache
+func (c *Cache) Keys() []string {
+	keys := make([]string, len(c.values))
+	i := 0
+	for k := range c.values {
+		keys[i] = k
+		i++
+	}
+
+	return keys
+}
+
 func (c *Cache) Evict(count int) int {
 	c.lock.Lock()
 	defer c.lock.Unlock()
