@@ -66,3 +66,29 @@ func TestEviction(t *testing.T) {
 		t.Error("Incorrect item")
 	}
 }
+
+func TestGetFrequency(t *testing.T) {
+	c := New()
+	c.Set("a", "a")
+	freq := c.GetFrequency("a")
+	if freq != 1 {
+		t.Fatal("Incorrect frequency", freq)
+	}
+
+	freq = c.GetFrequency("b")
+	if freq != 0 {
+		t.Fatal("Incorrect frequency", freq)
+	}
+
+	c.Get("a")
+	freq = c.GetFrequency("a")
+	if freq != 2 {
+		t.Fatal("Incorrect frequency", freq)
+	}
+
+	c.Set("a", "a")
+	freq = c.GetFrequency("a")
+	if freq != 3 {
+		t.Fatal("Incorrect frequency", freq)
+	}
+}

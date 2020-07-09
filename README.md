@@ -3,7 +3,7 @@ A simple LFU cache for golang.  Based on the paper [An O(1) algorithm for implem
 Usage:
 
 ```go
-import "github.com/dgrijalva/lfu-go"
+import "github.com/ChainSafe/go-lfu"
 
 // Make a new thing
 c := lfu.New()
