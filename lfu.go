@@ -70,7 +70,7 @@ func (c *Cache) Set(key string, value interface{}) {
 		// bounds mgmt
 		if c.UpperBound > 0 && c.LowerBound > 0 {
 			if c.len > c.UpperBound {
-				c.evict(c.len-c.LowerBound, &key)
+				c.evict(c.len - c.LowerBound)
 			}
 		}
 	}
@@ -109,20 +109,16 @@ func (c *Cache) Keys() []string {
 func (c *Cache) Evict(count int) int {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	return c.evict(count, nil)
+	return c.evict(count)
 }
 
-func (c *Cache) evict(count int, excluding *string) int {
+func (c *Cache) evict(count int) int {
 	// No lock here so it can be called
 	// from within the lock (during Set)
 	var evicted int
 	for i := 0; i < count; {
 		if place := c.freqs.Front(); place != nil {
 			for entry, _ := range place.Value.(*listEntry).entries {
-				if excluding != nil && entry.key == *excluding {
-					continue
-				}
-
 				if i < count {
 					if c.EvictionChannel != nil {
 						c.EvictionChannel <- Eviction{
