@@ -76,10 +76,22 @@ func (c *Cache) Set(key string, value interface{}) {
 	}
 }
 
+// Len returns the
 func (c *Cache) Len() int {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	return c.len
+}
+
+// GetFrequency returns the frequency count of the given key
+func (c *Cache) GetFrequency(key string) int {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if e, ok := c.values[key]; ok {
+		return e.freqNode.Value.(*listEntry).freq
+	}
+
+	return 0
 }
 
 func (c *Cache) Evict(count int) int {
