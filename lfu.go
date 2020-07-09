@@ -42,6 +42,18 @@ func New() *Cache {
 	return c
 }
 
+// Has checks if the cache contains the given key, without incrementing the frequency.
+func (c *Cache) Has(key string) bool {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	if e, ok := c.values[key]; ok {
+		return true
+	}
+	return nil
+}
+
+// Get retrieves the key's value if it exists, incrementing the frequency.
+// It returns nil if there is no value for the given key.
 func (c *Cache) Get(key string) interface{} {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -52,6 +64,8 @@ func (c *Cache) Get(key string) interface{} {
 	return nil
 }
 
+// Set sets given key-value in the cache.
+// If the key-value already exists, it increases the frequency.
 func (c *Cache) Set(key string, value interface{}) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -76,7 +90,7 @@ func (c *Cache) Set(key string, value interface{}) {
 	}
 }
 
-// Len returns the
+// Len returns the length of the cache
 func (c *Cache) Len() int {
 	c.lock.Lock()
 	defer c.lock.Unlock()
